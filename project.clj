@@ -30,5 +30,9 @@
                  [com.cemerick/friend "0.2.1"]
                  [compojure "1.4.0"]
 
+                 ; rest api
+                 [yada "1.0.0-20150903.093751-9"]
+
                  ; http server
-                 [org.immutant/web "2.1.1"]])
+                 [org.immutant/web "2.1.1"]
+                 [aleph "0.4.1-beta2"]])
