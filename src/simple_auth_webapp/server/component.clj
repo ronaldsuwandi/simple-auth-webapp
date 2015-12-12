@@ -2,17 +2,19 @@
   (:require [com.stuartsierra.component :as component]
             [simple-auth-webapp.server.handler :as handler]))
 
-(defrecord Server [port database]
+(defrecord Server [options database]
   component/Lifecycle
 
-  (start [component]
+  (start [server]
     (prn "Starting server")
-    (handler/start-server component))
+    (handler/start-server server)
+    server)
 
-  (stop [this]
-    (prn "Stopping " this)))
+  (stop [server]
+    (prn "Stopping server")
+    (handler/stop-server server)
+    server))
 
 (defn new-server
   [port options]
-  (map->Server {:port port
-                :options options}))
+  (map->Server {:options (merge {:port port} options)}))

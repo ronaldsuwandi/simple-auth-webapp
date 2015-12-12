@@ -1,7 +1,6 @@
 (ns simple-auth-webapp.server.handler
   (:require [cemerick.friend :as friend]
             [immutant.web :refer :all]
-            ;[simple-auth-webapp.server.component :as component]
             (cemerick.friend [workflows :as workflows]
                              [credentials :as creds])))
 
@@ -27,14 +26,17 @@
 
 (defn handler
   [req]
-  {:status 200
+  {:status  200
    :headers {"Content-Type" "text/html"}
-   :body "Hello there"})
+   :body    "Hello there"})
 
 (defn -main
   [& args]
-  (run handler))
+  (run handler {:port 9001}))
 
-(defn start-server [component]
-  (prn "comp=" component)
-  (run handler))
+(defn start-server [server]
+  (prn "comp=" server)
+  (run handler (:options server)))
+
+(defn stop-server [server]
+  (stop (:options server)))

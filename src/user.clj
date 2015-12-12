@@ -1,6 +1,6 @@
 (ns user
   (:require [com.stuartsierra.component :as component]
-            [clojure.tools.namespace.repl :refer [refresh-all]]
+            [clojure.tools.namespace.repl :refer [refresh]]
             [simple-auth-webapp.app :refer [app]]))
 
 (def system nil)
@@ -22,4 +22,4 @@
 
 (defn reset []
   (stop)
-  (refresh-all :after 'user/go))
+  (refresh :after 'user/go))

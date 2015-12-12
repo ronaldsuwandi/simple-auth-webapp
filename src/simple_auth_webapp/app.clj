@@ -7,6 +7,6 @@
   [config]
   (-> (component/system-map
         :db (db/new-database "localhost" 5420)
-        :app (server/new-server 8080 nil))
+        :app (server/new-server 9001 {}))
       (component/system-using
         {:app {:database :db}})))
