@@ -1,6 +1,5 @@
 (ns simple-auth-webapp.core-test
-  (:require [clojure.test :refer :all]
-            [simple-auth-webapp.user :refer :all]))
+  (:require [clojure.test :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."

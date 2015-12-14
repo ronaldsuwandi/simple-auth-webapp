@@ -4,7 +4,10 @@
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :main ^:skip-aot simple-auth-webapp.app
-  :source-paths ["src" "dev"]
+  :profiles {
+             :dev {:source-paths ["dev"]}
+             }
+  :source-paths ["src"]
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.clojure/tools.namespace "0.2.11"]
 
@@ -30,9 +33,5 @@
                  [com.cemerick/friend "0.2.1"]
                  [compojure "1.4.0"]
 
-                 ; rest api
-                 [yada "1.0.0-20150903.093751-9"]
-
                  ; http server
-                 [org.immutant/web "2.1.1"]
-                 [aleph "0.4.1-beta2"]])
+                 [org.immutant/web "2.1.1"]])

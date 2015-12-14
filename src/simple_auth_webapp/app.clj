@@ -1,7 +1,7 @@
 (ns simple-auth-webapp.app
   (:require [com.stuartsierra.component :as component]
-            [simple-auth-webapp.db.component :as db]
-            [simple-auth-webapp.server.component :as server]))
+            [simple-auth-webapp.components.db :as db]
+            [simple-auth-webapp.components.server :as server]))
 
 (defn app
   [config]

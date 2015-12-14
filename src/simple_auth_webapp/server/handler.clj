@@ -1,42 +1,49 @@
 (ns simple-auth-webapp.server.handler
   (:require [cemerick.friend :as friend]
+            [compojure.core :refer :all]
+            [compojure.route :as route]
             [immutant.web :refer :all]
-            (cemerick.friend [workflows :as workflows]
-                             [credentials :as creds])))
+            [ring.middleware.params :refer [wrap-params]]
+            [ring.middleware.keyword-params :refer [wrap-keyword-params]]
+            [ring.middleware.session :refer [wrap-session]]
+            [ring.middleware.session.cookie :as cookie]
+            [simple-auth-webapp.services.about.routes :refer [about-routes]]
+            [simple-auth-webapp.services.users.routes :refer [users-routes]]
+            [cemerick.friend.credentials :as creds]
+            [cemerick.friend.workflows :as workflows]
+            [simple-auth-webapp.db.dummy-db :as db]))
 
-; a dummy in-memory user "database"
-(def users {"root" {:username "root"
-                    :password (creds/hash-bcrypt "admin_password")
-                    :roles    #{::admin}}
-            "jane" {:username "jane"
-                    :password (creds/hash-bcrypt "user_password")
-                    :roles    #{::user}}})
 
-;(def ring-app                                               ; ... assemble routes however you like ...
-;  )
-;
-;(def secured-app
-;  (-> ring-app
-;      (friend/authenticate {:credential-fn (partial creds/bcrypt-credential-fn users)
-;                            :workflows     [(workflows/interactive-form)]})
-;      ; ...required Ring middlewares ...
-;      ))
-;
-;
+(defn- not-found-route
+  []
+  (route/not-found "Not found hurrdurr"))
 
-(defn handler
-  [req]
-  {:status  200
-   :headers {"Content-Type" "text/html"}
-   :body    "Hello there"})
+(defn create-handler
+  []
+  (let [all-routes (routes
+                     about-routes
+                     (friend/wrap-authorize users-routes #{:roles.admin})
+
+                     ;(not-found-route)
+                     )]
+    (-> all-routes
+        (friend/authenticate {:allow-anon?             true
+                              :unathorized-handler     (constantly {:status 401})
+                              :unauthenticated-handler (constantly {:status 401})
+                              :workflows               [(workflows/interactive-form
+                                                          :redirect-on-auth? false
+                                                          :credential-fn #(creds/bcrypt-credential-fn
+                                                                           db/users %))]})
+        (wrap-params)
+        (wrap-keyword-params)
+        (wrap-session {:store (cookie/cookie-store {:key "0123456789abcdef"})}))))
 
 (defn -main
   [& args]
-  (run handler {:port 9001}))
+  (run create-handler {:port 9001}))
 
 (defn start-server [server]
-  (prn "comp=" server)
-  (run handler (:options server)))
+  (run (create-handler) (:options server)))
 
 (defn stop-server [server]
   (stop (:options server)))

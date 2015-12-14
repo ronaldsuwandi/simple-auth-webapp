@@ -1,4 +1,4 @@
-(ns simple-auth-webapp.db.component
+(ns simple-auth-webapp.components.db
   (:require [com.stuartsierra.component :as component]))
 
 (defrecord Database [host port connection]
@@ -14,4 +14,3 @@
 
 (defn new-database [host port]
   (map->Database {:host host :port port}))
-

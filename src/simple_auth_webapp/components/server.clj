@@ -1,4 +1,4 @@
-(ns simple-auth-webapp.server.component
+(ns simple-auth-webapp.components.server
   (:require [com.stuartsierra.component :as component]
             [simple-auth-webapp.server.handler :as handler]))
 
