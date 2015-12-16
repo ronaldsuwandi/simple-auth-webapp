@@ -34,5 +34,8 @@
                  [buddy/buddy-auth "0.8.2"]
                  [compojure "1.4.0"]
 
+                 ; cryptography
+                 [buddy/buddy-core "0.8.1"]
+
                  ; http server
                  [org.immutant/web "2.1.1"]])

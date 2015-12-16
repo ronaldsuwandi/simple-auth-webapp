@@ -1,5 +1,4 @@
-(ns simple-auth-webapp.db.dummy-db
-  )
+(ns simple-auth-webapp.db.dummy-db)
 
 (def ^:private users {"root" {:username "root"
                               :password "admin_password"}
@@ -10,3 +9,4 @@
   [db]
   (prn "get users - db" db)
   users)
+
