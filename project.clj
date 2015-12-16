@@ -30,7 +30,8 @@
 
                  ; webapp
                  [ring/ring-core "1.4.0"]
-                 [com.cemerick/friend "0.2.1"]
+                 [ring/ring-defaults "0.1.5"]
+                 [buddy/buddy-auth "0.8.2"]
                  [compojure "1.4.0"]
 
                  ; http server

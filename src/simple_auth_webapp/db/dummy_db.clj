@@ -1,9 +1,12 @@
 (ns simple-auth-webapp.db.dummy-db
-  (:require [cemerick.friend.credentials :as creds]))
+  )
 
-(def users {"root" {:username "root"
-                    :password (creds/hash-bcrypt "admin_password")
-                    :roles    #{:roles.admin}}
-            "jane" {:username "jane"
-                    :password (creds/hash-bcrypt "user_password")
-                    :roles    #{:roles.user}}})
+(def ^:private users {"root" {:username "root"
+                              :password "admin_password"}
+                      "jane" {:username "jane"
+                              :password "user_password"}})
+
+(defn get-users
+  [db]
+  (prn "get users - db" db)
+  users)

@@ -2,7 +2,7 @@
   (:require [com.stuartsierra.component :as component]
             [simple-auth-webapp.server.handler :as handler]))
 
-(defrecord Server [options database]
+(defrecord Server [options database auth]
   component/Lifecycle
 
   (start [server]
