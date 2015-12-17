@@ -31,11 +31,13 @@
                  ; webapp
                  [ring/ring-core "1.4.0"]
                  [ring/ring-defaults "0.1.5"]
+                 [ring/ring-json "0.4.0"]
                  [buddy/buddy-auth "0.8.2"]
                  [compojure "1.4.0"]
 
                  ; cryptography
                  [buddy/buddy-core "0.8.1"]
+                 [buddy/buddy-hashers "0.9.1"]
 
                  ; http server
                  [org.immutant/web "2.1.1"]])
