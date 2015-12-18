@@ -2,26 +2,21 @@
   (:require [compojure.core :refer :all]
             [simple-auth-webapp.auth.credential :refer :all]
             [simple-auth-webapp.auth.token :refer :all]
-            [buddy.core.hash :as hash]
-            [buddy.core.codecs :as codecs]))
-
+            [clj-time.core :as time]
+            [buddy.sign.jws :as jws]))
 
 (defn login
   [auth]
   (fn [req]
-    (let [username (get-in req [:form-params "username"])
-          password (get-in req [:form-params "password"])
+    (let [username (get-in req [:body :username])
+          password (get-in req [:body :password])
           valid? (valid-credential? auth {:username username :password password})]
       (if valid?
-        (let [token (generate-token)
-              hashed-token (codecs/bytes->base64 (hash/md5 token))]
-          (prn "token=" token)
-          (prn "hashtoken= " hashed-token)
-          (prn {:status 200 :body {:token hashed-token}})
-          ;{:status 200
-          ; :body   {:token hashed-token}})
+        (let [claims {:user (keyword (:user username))
+                      :exp (time/plus (time/now) (time/seconds 1))}
+              token (jws/sign claims (:secret auth))]
           {:status 200
-           :body {:token hashed-token}})
+           :body   {:token token}})
         {:status 401}))))
 
 (defn auth-routes

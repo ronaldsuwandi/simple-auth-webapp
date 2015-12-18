@@ -1,6 +1,7 @@
 (ns simple-auth-webapp.auth.credential
   (:require [simple-auth-webapp.db.dummy-db :refer [get-users]]
-            [simple-auth-webapp.components.auth :as auth]))
+            [simple-auth-webapp.components.auth :as auth]
+            [buddy.hashers :as hash]))
 
 (defn valid-credential?
   [auth cred]

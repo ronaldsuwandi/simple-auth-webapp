@@ -10,7 +10,7 @@
             [simple-auth-webapp.services.auth.routes :refer [auth-routes]]
             [simple-auth-webapp.db.dummy-db :as db]
             [compojure.handler :refer :all]
-            [buddy.auth.backends.token :refer [token-backend]]
+            [buddy.auth.backends.token :refer [jws-backend]]
             [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]))
 
 
@@ -18,25 +18,18 @@
   []
   (route/not-found "Not found hurrdurr"))
 
-(defn authfn
-  [req token]
-  (prn "REQ" req)
-  (prn "TOKEN" token)
-  "root")
-
-(def backend (token-backend {:token-name "token"
-                             :authfn authfn}))
-
 (defn create-handler
   [{:keys [auth]}]
   (let [all-routes (routes
                      about-routes
                      users-routes
                      (auth-routes auth)
-                     (not-found-route))]
+                     (not-found-route))
+        header-backend (jws-backend {:token-name "token"
+                                     :secret (:secret auth)})]
     (-> all-routes
-        (wrap-authentication backend)
-        (wrap-authorization backend)
+        (wrap-authentication header-backend)
+        (wrap-authorization header-backend)
         (wrap-defaults (assoc site-defaults :security {:anti-forgery false}
                                             ;:session {:store       (cookie/cookie-store {:key "0123456789abcdef"})
                                             ;          :cookie-name "session"}

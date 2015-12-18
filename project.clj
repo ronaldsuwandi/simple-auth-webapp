@@ -40,4 +40,7 @@
                  [buddy/buddy-hashers "0.9.1"]
 
                  ; http server
-                 [org.immutant/web "2.1.1"]])
+                 [org.immutant/web "2.1.1"]
+
+                 ; time
+                 [clj-time "0.11.0"]])

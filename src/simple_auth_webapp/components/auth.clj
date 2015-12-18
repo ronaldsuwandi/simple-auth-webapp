@@ -6,11 +6,11 @@
 
   (start [auth]
     (prn "Starting authentication service")
-    auth)
+    (assoc auth :secret "secretpassword"))
 
   (stop [auth]
     (prn "Stopping authentication service")
-    auth))
+    (dissoc auth :secret)))
 
 (defn new-auth
   []
