@@ -2,7 +2,6 @@
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
             [immutant.web :refer :all]
-            [ring.middleware.session.cookie :as cookie]
             [ring.middleware.defaults :refer :all]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [simple-auth-webapp.services.about.routes :refer [about-routes]]
@@ -26,11 +25,12 @@
                      users-routes
                      (auth-routes auth)
                      (not-found-route))
-        header-backend (jws-cookie-backend (jws-backend {:token-name "token"
-                                                         :secret     (:secret auth)}))]
+        header-backend (jws-backend {:token-name "token"
+                                     :secret     (:secret auth)})
+        cookie-backend (jws-cookie-backend header-backend {:cookie-name "token"})]
     (-> all-routes
-        (wrap-authentication header-backend)
-        (wrap-authorization header-backend)
+        (wrap-authentication header-backend cookie-backend)
+        (wrap-authorization cookie-backend)
         (wrap-defaults (assoc site-defaults :security {:anti-forgery false}
                                             ;:session {:store       (cookie/cookie-store {:key "0123456789abcdef"})
                                             ;          :cookie-name "session"}
