@@ -13,7 +13,7 @@
           valid? (valid-credential? auth {:username username :password password})]
       (if valid?
         (let [claims {:user (keyword (:user username))
-                      :exp (time/plus (time/now) (time/seconds 1))}
+                      :exp (time/plus (time/now) (time/seconds 3600))}
               token (jws/sign claims (:secret auth))]
           {:status 200
            :body   {:token token}})

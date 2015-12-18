@@ -11,6 +11,7 @@
             [simple-auth-webapp.db.dummy-db :as db]
             [compojure.handler :refer :all]
             [buddy.auth.backends.token :refer [jws-backend]]
+            [simple-auth-webapp.auth.jws-cookie-backend :refer [jws-cookie-backend]]
             [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]))
 
 
@@ -25,8 +26,8 @@
                      users-routes
                      (auth-routes auth)
                      (not-found-route))
-        header-backend (jws-backend {:token-name "token"
-                                     :secret (:secret auth)})]
+        header-backend (jws-cookie-backend (jws-backend {:token-name "token"
+                                                         :secret     (:secret auth)}))]
     (-> all-routes
         (wrap-authentication header-backend)
         (wrap-authorization header-backend)
