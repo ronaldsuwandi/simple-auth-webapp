@@ -7,7 +7,7 @@
 
 (defn init []
   (alter-var-root #'system
-                  (constantly (app {:host "dbhost.com" :port 123}))))
+                  (constantly (app {}))))
 
 (defn start []
   (alter-var-root #'system component/start))

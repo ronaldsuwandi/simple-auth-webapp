@@ -1,7 +1,6 @@
 (ns simple-auth-webapp.services.auth.routes
   (:require [compojure.core :refer :all]
             [simple-auth-webapp.auth.credential :refer :all]
-            [simple-auth-webapp.auth.token :refer :all]
             [clj-time.core :as time]
             [buddy.sign.jws :as jws]))
 
@@ -14,14 +13,11 @@
           valid? (valid-credential? auth {:username username :password password})]
       (if valid?
         (let [token-expiry (if remember? (* 60 24 60 60)
-                                         ;(* 24 60 60)
-                                         1
-                                          )
+                                         (* 24 60 60))
               claims {:user (keyword (:user username))
                       :exp  (time/plus (time/now) (time/seconds token-expiry))}
               token (jws/sign claims (:secret auth))
-              cookie-value {:value token :max-age token-expiry}]
-          (prn "REMEMBER?" remember?)
+              cookie-value {:value token :max-age token-expiry :http-only true}]
           {:status  200
            :body    {:token token}
            :cookies {"token" cookie-value}})

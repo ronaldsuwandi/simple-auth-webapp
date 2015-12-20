@@ -11,19 +11,28 @@
             [compojure.handler :refer :all]
             [buddy.auth.backends.token :refer [jws-backend]]
             [simple-auth-webapp.auth.jws-cookie-backend :refer [jws-cookie-backend]]
-            [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]))
+            [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]
+            [buddy.auth.accessrules :refer [restrict]]
+            [buddy.auth :refer [authenticated?]]))
 
 
 (defn- not-found-route
   []
-  (route/not-found "Not found hurrdurr"))
+  (route/not-found "Not found"))
+
+(defn authenticated-routes
+  []
+  (restrict
+    (routes
+      users-routes)
+    {:handler authenticated?}))
 
 (defn create-handler
   [{:keys [auth]}]
   (let [all-routes (routes
                      about-routes
-                     users-routes
                      (auth-routes auth)
+                     (authenticated-routes)
                      (not-found-route))
         header-backend (jws-backend {:token-name "token"
                                      :secret     (:secret auth)})
@@ -32,15 +41,9 @@
         (wrap-authentication header-backend cookie-backend)
         (wrap-authorization cookie-backend)
         (wrap-defaults (assoc site-defaults :security {:anti-forgery false}
-                                            ;:session {:store       (cookie/cookie-store {:key "0123456789abcdef"})
-                                            ;          :cookie-name "session"}
                                             :session false))
         (wrap-json-response)
         (wrap-json-body {:keywords? true :bigdecimals? true}))))
-
-(defn -main
-  [& args]
-  (run create-handler {:port 9001}))
 
 (defn start-server [server]
   (run (create-handler server) (:options server)))

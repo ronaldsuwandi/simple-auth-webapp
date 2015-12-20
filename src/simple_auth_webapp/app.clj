@@ -14,3 +14,7 @@
         {:auth {:database :db}
          :app {:database :db
                :auth :auth}})))
+
+(defn -main
+  [& args]
+  (component/start (app {})))

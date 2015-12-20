@@ -10,7 +10,7 @@
 
   (stop [auth]
     (prn "Stopping authentication service")
-    (dissoc auth :secret)))
+    (assoc auth :secret nil)))
 
 (defn new-auth
   []
